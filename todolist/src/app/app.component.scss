@@ -1,0 +1,32 @@
+.menu-header {
+    color: white;
+    z-index: bold;
+    text-align: center; 
+    width: 100%; 
+    height:50px; 
+    background-color: #322d90;
+}
+
+.text-menu-header {
+    font-family: Roboto,Helvetica Neue,sans-serif;
+    font-weight: 500;
+    vertical-align: middle;
+    line-height: 50px;
+}
+
+.mat-elevation-z6 {
+    box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);
+}
+
+#container {
+    width: 100%;
+    height: 100%;
+    background-color: beige;
+    font-size: 110%;
+}
+
+.todo-item{
+    vertical-align: middle;
+    line-height: 40px;
+    text-align: center;
+}
