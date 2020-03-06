@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { SortCheckList } from './checklist/checklist.pipe';
 
 // Material Components
 import {MatButtonModule} from '@angular/material/button';
@@ -21,10 +22,14 @@ import {MatCardModule} from '@angular/material/card';
 import {ChecklistComponent} from './checklist/checklist.component';
 import {TextFieldModule} from '@angular/cdk/text-field';
 
+import { StoreModule } from '@ngrx/store';
+import { listReducer } from './store/list.reducer';
+
 @NgModule({
   declarations: [
     AppComponent,
-    ChecklistComponent
+    ChecklistComponent,
+    SortCheckList
   ],
   imports: [
     BrowserModule,
@@ -42,7 +47,8 @@ import {TextFieldModule} from '@angular/cdk/text-field';
     MatSliderModule,
     MatSlideToggleModule,
     MatCardModule,
-    TextFieldModule
+    TextFieldModule,
+    StoreModule.forRoot({ list: listReducer })
   ],
   providers: [],
   bootstrap: [AppComponent]

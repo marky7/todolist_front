@@ -1,11 +1,41 @@
 
+
 <mat-card class="checklist-main">
-    <p class="my-mat-card-title">My tasks</p>	
-    <div *ngFor="let item of todos; index as i;">
-        <div class=" todo-item"  >
-            <mat-checkbox class=" example-margin" [(ngModel)]="item.isChecked">        
-                {{item.title}}
-                {{item.checked}}
+    <p class="my-mat-card-title">Add a task</p>
+    <div style=" display:flex;">
+        <mat-form-field  style="flex:2">
+            <input matInput placeholder="Title">
+        </mat-form-field>
+
+        <mat-form-field style="flex:5">
+            <textarea matInput
+                    placeholder="Description"
+                    cdkTextareaAutosize
+                    #autosize="cdkTextareaAutosize"
+                    cdkAutosizeMinRows="1"
+                    cdkAutosizeMaxRows="5"></textarea>
+        </mat-form-field>
+
+        <button class="validate-button" style="flex:1" mat-raised-button>Create Task</button>
+    </div>
+</mat-card>
+
+<mat-card class="checklist-main">
+    <p class="my-mat-card-title">My tasks</p>
+
+    <div *ngFor="let todo of list$ | async ; index as i; ">
+        <div [hidden]="todo.isChecked" class="todo-item" >
+            <mat-checkbox [(ngModel)]="todo.isChecked" (click)="updateTask(todo)">
+                {{todo.title}}
+            </mat-checkbox>
+            <div class="remove-task">&#10006;</div>
+        </div>
+    </div>
+
+    <div *ngFor="let todo of list$ | async ; index as i; ">
+        <div  [hidden]="!todo.isChecked" class="todo-item" >
+            <mat-checkbox [(ngModel)]="todo.isChecked" (click)="updateTask(todo)"> 
+                <div [ngClass]="{'crossed':todo.isChecked}"> {{todo.title}} </div>
             </mat-checkbox>
             <div class="remove-task">&#10006;</div>
         </div>
