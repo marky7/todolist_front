@@ -21,6 +21,9 @@ import {MatCardModule} from '@angular/material/card';
 import {ChecklistComponent} from './checklist/checklist.component';
 import {TextFieldModule} from '@angular/cdk/text-field';
 
+import { StoreModule } from '@ngrx/store';
+import { listReducer } from './store/list.reducer';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -42,7 +45,8 @@ import {TextFieldModule} from '@angular/cdk/text-field';
     MatSliderModule,
     MatSlideToggleModule,
     MatCardModule,
-    TextFieldModule
+    TextFieldModule,
+    StoreModule.forRoot({ list: listReducer })
   ],
   providers: [],
   bootstrap: [AppComponent]
