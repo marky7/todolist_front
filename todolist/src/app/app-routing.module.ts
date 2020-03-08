@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ChecklistComponent } from './checklist/checklist.component'
+import { TodoDetailComponent } from './todo-detail/todo-detail.component'
 
 const routes: Routes = [
   { 
@@ -10,7 +11,10 @@ const routes: Routes = [
   },{ 
     path: 'checklist', 
     component: ChecklistComponent 
-  },
+  },{ 
+    path: 'checklist/:id', 
+    component: TodoDetailComponent 
+  }
 ];
 
 @NgModule({

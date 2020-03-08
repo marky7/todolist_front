@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // Material Components
 import {MatButtonModule} from '@angular/material/button';
@@ -23,11 +23,13 @@ import {TextFieldModule} from '@angular/cdk/text-field';
 
 import { StoreModule } from '@ngrx/store';
 import { listReducer } from './store/list.reducer';
+import { TodoDetailComponent } from './todo-detail/todo-detail.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ChecklistComponent
+    ChecklistComponent,
+    TodoDetailComponent
   ],
   imports: [
     BrowserModule,
@@ -35,7 +37,6 @@ import { listReducer } from './store/list.reducer';
     RouterModule, 
     BrowserAnimationsModule,
     MatAutocompleteModule,
-    FormsModule,
     MatButtonModule,
     MatCheckboxModule,
     MatFormFieldModule,
@@ -46,7 +47,9 @@ import { listReducer } from './store/list.reducer';
     MatSlideToggleModule,
     MatCardModule,
     TextFieldModule,
-    StoreModule.forRoot({ list: listReducer })
+    StoreModule.forRoot({ list: listReducer }),
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
