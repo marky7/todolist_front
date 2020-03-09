@@ -13,7 +13,4 @@ export const updateTaskAction = createAction('[Task Component] update',
     props<{ task: Task; }>()
 );
 
-export const checkTaskAction = createAction('[Task Component] check',     
-    props<{ task: Task; }>()
-);
 

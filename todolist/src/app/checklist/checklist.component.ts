@@ -3,7 +3,9 @@ import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
 
-import { addTaskAction, removeTaskAction, updateTaskAction, checkTaskAction } from '../store/list.actions';
+
+
+import { addTaskAction, removeTaskAction, updateTaskAction } from '../store/list.actions';
 import { Task } from '../store/task.interface'
 
 @Component({
@@ -11,9 +13,9 @@ import { Task } from '../store/task.interface'
   templateUrl: './checklist.component.html',
   styleUrls: ['./checklist.component.scss']
 })
+
 export class ChecklistComponent implements OnInit {
   
-  list$: Observable<Array<Task>>;
   list: Array<Task>;
   profileForm = new FormGroup({
     title: new FormControl(''),
@@ -21,8 +23,6 @@ export class ChecklistComponent implements OnInit {
   });
 
   constructor(private store: Store<{ list: Array<Task> }>) {
-    this.list$ = store.pipe(select('list'))
-
     this.store.pipe().subscribe(attr => {
       this.list = attr.list;
     });
@@ -31,13 +31,15 @@ export class ChecklistComponent implements OnInit {
   ngOnInit(): void {}
 
   onSubmit() {
-    this.addTask({
+    if(this.profileForm.value.title){
+      this.addTask({
         title : this.profileForm.value.title,
         description: this.profileForm.value.description,
         creationDate : null, // Will be filled by reducer
         id : null, // Will be filled by reducer
         isChecked: false 
-    });
+      });
+    }
     this.profileForm.reset({});
   }
 

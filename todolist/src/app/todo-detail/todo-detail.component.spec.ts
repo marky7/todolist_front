@@ -4,6 +4,8 @@ import { StoreModule } from '@ngrx/store';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { InitialList, listReducer, TaskListInterface } from '../store/list.reducer';
 import {ActivatedRoute} from '@angular/router';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { RouterTestingModule } from "@angular/router/testing";
 
 describe('TodoDetailComponent', () => {
   let component: TodoDetailComponent;
@@ -24,8 +26,10 @@ describe('TodoDetailComponent', () => {
         MockStore
       ], imports: [
         //StoreModule.forRoot({ list: listReducer })
-        StoreModule.forRoot(listReducer)
-      ]
+        StoreModule.forRoot(listReducer),
+        RouterTestingModule
+      ],      
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();
   }));

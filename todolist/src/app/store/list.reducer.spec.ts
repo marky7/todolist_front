@@ -1,11 +1,5 @@
-/*
-import { Store } from '@ngrx/store';
-import { provideMockStore, MockStore } from '@ngrx/store/testing';
-import { cold } from 'jasmine-marbles';
-*/
-import { TestBed, async } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { addTaskAction, removeTaskAction, updateTaskAction, checkTaskAction } from './list.actions';
+
+import { addTaskAction, removeTaskAction, updateTaskAction } from './list.actions';
 import { InitialList, listReducer } from './list.reducer';
 import { Task } from './task.interface';
 
@@ -31,7 +25,7 @@ describe('listReducer', () => {
         return JSON.parse(JSON.stringify(arg))
     }
 
-    it('LIST REDUCER: should return the object unchanged', () => {
+    it('LIST REDUCER: should return the task unchanged', () => {
         const action = updateTaskAction({task:InitialList[0]});
         const result = listReducer(InitialList, action);
         expect(result).toEqual(InitialList); // TO VERIFY

@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { Task } from './task.interface';
-import { addTaskAction, removeTaskAction, updateTaskAction, checkTaskAction } from './list.actions';
+import { addTaskAction, removeTaskAction, updateTaskAction } from './list.actions';
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { UUID } from 'angular2-uuid';
 
@@ -36,7 +36,6 @@ export const InitialList:TaskListInterface = new Array(
     creationDate: new Date('December 14, 1995 03:24:00')
   }
 );
-
 
 function getTaskIndexById(list,id){
   const getElementById = (element) => element.id === id;
