@@ -3,7 +3,7 @@ import { Store, select } from '@ngrx/store';
 import { Task } from '../store/task.interface'
 import {ActivatedRoute} from '@angular/router';
 import { getTask } from '../store/list.selectors'
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-todo-detail',
