@@ -7,7 +7,7 @@ describe('listSelector', () => {
         return JSON.parse(JSON.stringify(arg))
     }
 
-    it('LIST SELECTOR: getTask - should return the task unchanged', () => {
+    it('getTask - should return the task unchanged', () => {
         const state = deepClone(InitialList);
         expect(getTask({list:state},{id:InitialList[0].id})).toBe(state[0]);
     });

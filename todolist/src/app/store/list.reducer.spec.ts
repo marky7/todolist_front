@@ -25,13 +25,13 @@ describe('listReducer', () => {
         return JSON.parse(JSON.stringify(arg))
     }
 
-    it('LIST REDUCER: should return the task unchanged', () => {
+    it('should return the task unchanged', () => {
         const action = updateTaskAction({task:InitialList[0]});
         const result = listReducer(InitialList, action);
-        expect(result).toEqual(InitialList); // TO VERIFY
+        expect(result).toEqual(InitialList); 
     });
 
-    it('LIST REDUCER: should return the task updated', () => {
+    it('should return the task updated', () => {
         let InitialListDeepCopy = deepClone(InitialList)
         let myUpdatedTaskDeepCopy = deepClone(myUpdatedTask);
         const action = updateTaskAction({task:myUpdatedTaskDeepCopy});
@@ -46,7 +46,7 @@ describe('listReducer', () => {
         expect(myUpdatedTaskResult).toEqual(myUpdatedTaskDeepCopy);
     });
 
-    it('LIST REDUCER: should delete the task', () => {
+    it('should delete the task', () => {
         let InitialListDeepCopy = deepClone(InitialList);
         const taskToRemovedId = InitialListDeepCopy[0].id;
         const action = removeTaskAction({id:taskToRemovedId});
@@ -61,7 +61,7 @@ describe('listReducer', () => {
         expect(elemStillExistsInList).toBe(false)
     });
 
-    it('LIST REDUCER: should add a new task', () => {
+    it('should add a new task', () => {
         let InitialListDeepCopy = deepClone(InitialList);
         let myNewTaskDeepCopy = deepClone(myNewTask);
         const action = addTaskAction({task:myNewTaskDeepCopy});

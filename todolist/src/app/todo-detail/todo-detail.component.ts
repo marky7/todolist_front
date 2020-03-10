@@ -19,9 +19,9 @@ export class TodoDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.routeSub = this.route.params.subscribe(params => {
-      this.store.pipe(select(getTask, { id: params.id })).subscribe(task => {
-        this.task = task;
-      });
+        this.store.pipe(select(getTask, { id: params.id })).subscribe(task => {
+          this.task = task;
+        });  
     });
   }
 }

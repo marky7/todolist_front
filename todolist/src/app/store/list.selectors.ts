@@ -11,8 +11,12 @@ function getTaskIndexById(list,id){
 export const getTask = createSelector(
     getTaskState$,
   (state, { id }) => {
-      const index:number = getTaskIndexById(state,id)
-      return state[index];
+      if(state){
+        const index:number = getTaskIndexById(state,id)
+        return state[index];  
+      } else {
+          return null;
+      }
     }
 );
 

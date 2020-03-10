@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
+
 import { TodoDetailComponent } from './todo-detail.component';
 import { StoreModule } from '@ngrx/store';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
@@ -6,29 +7,37 @@ import { InitialList, listReducer, TaskListInterface } from '../store/list.reduc
 import {ActivatedRoute} from '@angular/router';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterTestingModule } from "@angular/router/testing";
+import { of } from 'rxjs';
+import { Store, select } from '@ngrx/store';
 
 describe('TodoDetailComponent', () => {
+
   let component: TodoDetailComponent;
   let fixture: ComponentFixture<TodoDetailComponent>;
 
-  const fakeActivatedRoute = {
-      snapshot: {
-        data : {
-          // TODO
-        }
-      } 
-    } as ActivatedRoute;
+  let store: MockStore<TaskListInterface>;
+
+  function deepClone(arg:any){
+    return JSON.parse(JSON.stringify(arg))
+  }
+
+  const initState = deepClone(InitialList);
+  
+  let mockActivatedRoute = {
+    params: of({ id: initState[1].id }) 
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TodoDetailComponent ], 
-      providers: [
-        MockStore
-      ], imports: [
-        //StoreModule.forRoot({ list: listReducer })
-        StoreModule.forRoot(listReducer),
-        RouterTestingModule
-      ],      
+      declarations: [ 
+        TodoDetailComponent 
+      ], providers: [
+        provideMockStore(initState),
+        {
+         provide: ActivatedRoute,
+         useValue: mockActivatedRoute 
+        }
+      ], imports: [],    
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();
@@ -40,7 +49,13 @@ describe('TodoDetailComponent', () => {
     fixture.detectChanges();
   });
 
+  beforeEach(inject([Store], (testStore: MockStore<TaskListInterface>) => {
+    store = testStore;                            // save store reference for use in tests                                  
+    store.setState(initState);                    // set default state
+  }));
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
 });

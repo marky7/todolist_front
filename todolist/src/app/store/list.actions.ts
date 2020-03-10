@@ -12,5 +12,3 @@ export const removeTaskAction = createAction('[Task Component] remove',
 export const updateTaskAction = createAction('[Task Component] update',     
     props<{ task: Task; }>()
 );
-
-
