@@ -1,5 +1,4 @@
-import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { InitialList, TaskListInterface, listReducer } from './list.reducer';
+import { createSelector } from '@ngrx/store';
 
 export const getTaskState$ = (state) =>  state.list;
 

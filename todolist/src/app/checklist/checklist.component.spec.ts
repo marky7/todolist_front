@@ -4,7 +4,7 @@ import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 import { ChecklistComponent } from './checklist.component';
-import { InitialList, listReducer, TaskListInterface } from '../store/list.reducer';
+import { InitialList, TaskListInterface } from '../store/list.reducer';
 import { addTaskAction, removeTaskAction, updateTaskAction } from './../store/list.actions';
 import { Store } from '@ngrx/store';
 

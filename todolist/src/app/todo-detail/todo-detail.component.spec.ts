@@ -1,14 +1,12 @@
 import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 
 import { TodoDetailComponent } from './todo-detail.component';
-import { StoreModule } from '@ngrx/store';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
-import { InitialList, listReducer, TaskListInterface } from '../store/list.reducer';
+import { InitialList, TaskListInterface } from '../store/list.reducer';
 import {ActivatedRoute} from '@angular/router';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { RouterTestingModule } from "@angular/router/testing";
 import { of } from 'rxjs';
-import { Store, select } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 
 describe('TodoDetailComponent', () => {
 

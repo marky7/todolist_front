@@ -1,7 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { Task } from './task.interface';
 import { addTaskAction, removeTaskAction, updateTaskAction } from './list.actions';
-import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { UUID } from 'angular2-uuid';
 
 
