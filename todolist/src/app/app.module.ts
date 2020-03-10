@@ -1,11 +1,16 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
+
+// Import App Components
 import { AppComponent } from './app.component';
+import { TodoDetailComponent } from './todo-detail/todo-detail.component';
+import {ChecklistComponent} from './checklist/checklist.component';
+
+// Import Default Angular Components
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterModule, Routes } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // Material Components
 import {MatButtonModule} from '@angular/material/button';
@@ -18,7 +23,6 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatSliderModule} from '@angular/material/slider';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatCardModule} from '@angular/material/card';
-import {ChecklistComponent} from './checklist/checklist.component';
 import {TextFieldModule} from '@angular/cdk/text-field';
 
 import { StoreModule } from '@ngrx/store';
@@ -27,7 +31,8 @@ import { listReducer } from './store/list.reducer';
 @NgModule({
   declarations: [
     AppComponent,
-    ChecklistComponent
+    ChecklistComponent,
+    TodoDetailComponent
   ],
   imports: [
     BrowserModule,
@@ -35,7 +40,6 @@ import { listReducer } from './store/list.reducer';
     RouterModule, 
     BrowserAnimationsModule,
     MatAutocompleteModule,
-    FormsModule,
     MatButtonModule,
     MatCheckboxModule,
     MatFormFieldModule,
@@ -46,9 +50,12 @@ import { listReducer } from './store/list.reducer';
     MatSlideToggleModule,
     MatCardModule,
     TextFieldModule,
-    StoreModule.forRoot({ list: listReducer })
+    StoreModule.forRoot({ list: listReducer }),
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [ AppComponent ],
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
 export class AppModule { }

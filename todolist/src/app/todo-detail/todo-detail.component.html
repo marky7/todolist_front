@@ -1,0 +1,15 @@
+<mat-card  class="checklist-detail">
+    <div *ngIf="task">
+        <button class="validate-button" routerLink="/checklist" style="float:right" mat-raised-button>Return on Todo List</button>
+        <h3 [ngClass]="{'done' : task.isChecked}" class="my-mat-card-title">Title : {{ task.title }}</h3>
+        <h4>Creation Date : {{ task.creationDate | date:'short' }}</h4>
+        <h3 class="my-mat-card-title">Description </h3>
+        <p>{{ task.description }}</p>
+    </div>
+    <div *ngIf="!task">
+        <button class="validate-button" routerLink="/checklist" style="float:right" mat-raised-button>Return on Todo List</button>
+        <h3 class="my-mat-card-title">WARNING : No one task exists for this link</h3>
+    </div>
+</mat-card>
+
+
