@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators'; // library that allows you to specify a "teardown" Observable
 import { FormGroup, FormControl } from '@angular/forms';
-
-
 
 import { addTaskAction, removeTaskAction, updateTaskAction } from '../store/list.actions';
 import { Task } from '../store/task.interface'
@@ -13,16 +13,17 @@ import { Task } from '../store/task.interface'
   styleUrls: ['./checklist.component.scss']
 })
 
-export class ChecklistComponent {
+export class ChecklistComponent implements OnDestroy {
   
   list: Array<Task>;
+  private readonly storeNgDestroyed$ = new Subject<void>();
   profileForm = new FormGroup({
     title: new FormControl(''),
     description: new FormControl(''),
   });
 
   constructor(private store: Store<{ list: Array<Task> }>) {
-    this.store.pipe().subscribe(attr => {
+    this.store.pipe(takeUntil(this.storeNgDestroyed$)).subscribe(attr => {
       this.list = attr.list;
     });
   }
@@ -63,6 +64,11 @@ export class ChecklistComponent {
     // Set checked items above
       return list.sort((a:any, b:any) => b.creationDate - a.creationDate).sort((a:any, b:any) => (a.isChecked - b.isChecked))
     }
+  }
+
+  ngOnDestroy() {
+    this.storeNgDestroyed$.next();
+    this.storeNgDestroyed$.complete();
   }
 
 }
