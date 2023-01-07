@@ -29,7 +29,7 @@
             <mat-checkbox [ngClass]="{'crossed':todo.isChecked}" [(ngModel)]="todo.isChecked" (click)="updateTask(todo)">
                 {{todo.title}}
             </mat-checkbox>
-            <div (click)="removeTask(todo.id)" class="remove-task">&#10006;</div>
+            <button (click)="removeTask(todo.id)" class="remove-task">&#10006;</button>
             <div style="float: right; height: 100%; margin-right: 15px;" routerLink="/checklist/{{todo.id}}" class="remove-task">Details</div>
         </div>
     </div>

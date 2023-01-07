@@ -16,7 +16,7 @@
 - OK - Ligne 25: on a ici une fuite mémoire car la souscription n'est à aucun moment 'unsubscribe' (voir [cet article](https://medium.com/angular-in-depth/the-best-way-to-unsubscribe-rxjs-observable-in-the-angular-applications-d8f9aa42f6a0) pour plus d'explication). D'autre part, dans ce stream le `pipe()` est inutile puisqu'il ne comporte aucun opérateur. Pour éviter une souscription dans le composant, il aurait plutôt fallu faire `this.list = this.store.pipe(map(state => this.sortList(state.list)));`, et ensuite utiliser le pipe `async` d'angular dans le template `*ngFor="let todo of (list | async); index as i;"`, ce qui présente l'avantage de laisser la gestion de la désinscription automatique de l'observable à Angular.
 
 #### html
-- Ligne 32: pourquoi ne pas avoir utiliser un `<button>`? 
+- OK - Ligne 32: pourquoi ne pas avoir utiliser un `<button>`? 
 - Ligne 33: pourquoi ne pas avoir utiliser un `<a>`?
 ```scss
 // checklist.component.scss
