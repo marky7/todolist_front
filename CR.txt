@@ -2,9 +2,9 @@
 
 ## Code
 ### Global
-- Pas de prise en compte du tslint, non configuré peut être?
+- OK - Pas de prise en compte du tslint, non configuré peut être?
 - Très peu de typage, et quand c'est le cas on trouve des `any`, ce qui n'apporte aucune précision et donc doit être proscrit (les différents outils de check de qualité de code lèvent d'ailleurs une erreur quand ils en trouvent)
-- Présence inutile de la lib `rxjs-compat` dans le `package.json` (cette lib n'est qu'utile lors du passage de rxjs 5 à 6)
+- OK - Présence inutile de la lib `rxjs-compat` dans le `package.json` (cette lib n'est qu'utile lors du passage de rxjs 5 à 6)
 - Présence de la lib `angular-uuid` dans le `package.json` alors que non utilisée (c'est `angular2-uuid` qui l'est)
 - Présence de la lib `@ngrx/entity` dans le `package.json` alors que non utilisée
 - Présence de la lib `uninstall`, ce package [ne sert absolument à rien](https://www.reddit.com/r/npm/comments/93d7qj/uninstall_a_simple_package_that_has_nothing_but_a/) (chose confirmée quand on regarde dans `node_modules/uninstall`), pourquoi donc l'avoir installé?
