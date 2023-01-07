@@ -13,7 +13,7 @@ import { Task } from '../store/task.interface'
   styleUrls: ['./checklist.component.scss']
 })
 
-export class ChecklistComponent implements OnInit {
+export class ChecklistComponent {
   
   list: Array<Task>;
   profileForm = new FormGroup({
@@ -26,8 +26,6 @@ export class ChecklistComponent implements OnInit {
       this.list = attr.list;
     });
   }
-
-  ngOnInit(): void {}
 
   onSubmit() {
     if(this.profileForm.value.title){
