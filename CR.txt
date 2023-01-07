@@ -1,0 +1,155 @@
+## UI
+
+## Code
+### Global
+- Pas de prise en compte du tslint, non configuré peut être?
+- Très peu de typage, et quand c'est le cas on trouve des `any`, ce qui n'apporte aucune précision et donc doit être proscrit (les différents outils de check de qualité de code lèvent d'ailleurs une erreur quand ils en trouvent)
+- Présence inutile de la lib `rxjs-compat` dans le `package.json` (cette lib n'est qu'utile lors du passage de rxjs 5 à 6)
+- Présence de la lib `angular-uuid` dans le `package.json` alors que non utilisée (c'est `angular2-uuid` qui l'est)
+- Présence de la lib `@ngrx/entity` dans le `package.json` alors que non utilisée
+- Présence de la lib `uninstall`, ce package [ne sert absolument à rien](https://www.reddit.com/r/npm/comments/93d7qj/uninstall_a_simple_package_that_has_nothing_but_a/) (chose confirmée quand on regarde dans `node_modules/uninstall`), pourquoi donc l'avoir installé?
+- Pas d'utilisation de la lib `in-memory-web-api` (ou autre) pour mocker le backend (consigne _The application should have a mocked backend and store all todos on it (with in-memory-web-api for example)_)
+
+### checklist.component
+
+#### ts
+- Ligne 25: on a ici une fuite mémoire car la souscription n'est à aucun moment 'unsubscribe' (voir [cet article](https://medium.com/angular-in-depth/the-best-way-to-unsubscribe-rxjs-observable-in-the-angular-applications-d8f9aa42f6a0) pour plus d'explication). D'autre part, dans ce stream le `pipe()` est inutile puisqu'il ne comporte aucun opérateur. Pour éviter une souscription dans le composant, il aurait plutôt fallu faire `this.list = this.store.pipe(map(state => this.sortList(state.list)));`, et ensuite utiliser le pipe `async` d'angular dans le template `*ngFor="let todo of (list | async); index as i;"`, ce qui présente l'avantage de laisser la gestion de la désinscription automatique de l'observable à Angular.
+
+#### html
+- Ligne 32: pourquoi ne pas avoir utiliser un `<button>`? 
+- Ligne 33: pourquoi ne pas avoir utiliser un `<a>`?
+```scss
+// checklist.component.scss
+
+.todo-item {
+  display: flex;
+
+  > *:first-child {
+    flex-grow: 1;
+  }
+}
+```
+```html
+<!-- checklist.component.html -->
+
+        <div class="todo-item" >
+            <mat-checkbox [ngClass]="{'crossed':todo.isChecked}" [(ngModel)]="todo.isChecked" (click)="updateTask(todo)">
+                {{todo.title}}
+            </mat-checkbox>
+            <button type="button" mat-flat-button (click)="removeTask(todo.id)">&#10006;</button>
+            <a mat-flat-button routerLink="/checklist/{{todo.id}}">Details</a>
+        </div>
+```
+
+### spec
+- Au lieu de tester directement les propriétés et méthodes publiques (donc exposées à la vue) du composant, il faut toujours passer par la vue. La vue (le template) est partie intégrante du component, elle doit donc être testée (ceci est valable pour tous les tests de tous les composants du projet), car sinon les tests du composant pourraient se révéler ok, malgré que l'association composant/template soit non fonctionnelle. Exemple de test utilisant la vue:
+```typescript
+// checklist.component.spec.ts
+
+function typeIn(debugElement: DebugElement, text: string) {
+  debugElement.nativeElement.value = text;
+  debugElement.triggerEventHandler('input', { target: debugElement.nativeElement });
+  debugElement.nativeElement.blur();
+}
+
+...
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [ChecklistComponent],
+      providers: [provideMockStore(initState)],
+      imports: [ReactiveFormsModule, TextFieldModule],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
+  }));
+
+  it("should submit form to add task", () => {
+    const titleInputDe = fixture.debugElement.query(By.css("input"));
+    typeIn(titleInputDe, "my title");
+
+    const descTextareaDe = fixture.debugElement.query(By.css("textarea"));
+    typeIn(descTextareaDe, "my desc");
+
+    const formDe = fixture.debugElement.query(By.css("form"));
+    formDe.triggerEventHandler("submit", null);
+
+    expect(dispatchSpy).toHaveBeenCalledTimes(1);
+    expect(dispatchSpy).toHaveBeenCalledWith(
+      addTaskAction({
+        task: {
+          title: "my title",
+          description: "my desc",
+          creationDate: null,
+          id: null,
+          isChecked: false,
+        },
+      })
+    );
+
+    expect(titleInputDe.nativeElement.value).toBe("");
+    expect(descTextareaDe.nativeElement.value).toBe("");
+  });
+```
+
+### list.reducer
+#### ts
+- Principe d'immutabilité non respecté: le pattern NgRx, et plus globalement d'Angular et son cycle de change detection (voir la [doc officielle du reducer NgRx](https://ngrx.io/guide/store/reducers#creating-the-reducer-function) ou encore [cet article](https://vsavkin.com/immutability-vs-encapsulation-90549ab74487)) sont basés sur l'immutabilité. Au niveau du reducer, le principe est simple: on ne modifie pas le directement le state, on renvoie systématiquement un nouveau state dans lequel on est venu apporter les modifications souhaitées. Du coup, ici:
+-- `updateTaskFn`: l'array `list` est directement modifié, au niveau du return il aurait fallu écrire `return [...list];` (le spread operator `...` permet de décomposer le tableau, et donc de le cloner)
+-- `addTaskFn`: un élément est directement ajouté à `list`, il aurait plutôt fallu supprimer la ligne `list.push(params.task)` et au niveau du return écrire `return [...list, params.task];`
+-- `removeTaskFn`: un élément est directement retiré de `list`, il aurait plutôt fallu écrire tout simplement en 1 ligne `return list.filter(task => task.id === params.id);` (`Array.prototype.filter` retourne en effet un nouveau tableau) 
+- Fonction `getTaskIndexById` dupliquée à l'identique dans `list.selector.ts`, il aurait fallu mutualiser cette fonction au sein d'un fichier `utils.ts` et importer ensuite cette fonction au besoin, mais était-il vraiment nécessaire d'abstraire cette logique dans une fonction, qui peut s'écrire à chaque fois en 1 ligne `const taskIndex = list.findIndex((task: Task) => task.id === id);`? Par ailleurs, lorsqu'on souhaite directement récupérer un certain élément suivant une condition donnée dans un tableau, il existe la méthode `Array.prototype.find` (voir [doc](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Array/find)), qui évite donc de faire ça en 2 étapes (récupération de l'index, puis de l'élément du tableau grâce à cet index)
+
+#### spec
+- Il faut éviter l'utilisation de `JSON.parse(JSON.stringify())` pour cloner un objet, car c'est considéré comme une mauvaise pratique (voir [cet article](https://medium.com/@pmzubar/why-json-parse-json-stringify-is-a-bad-practice-to-clone-an-object-in-javascript-b28ac5e36521)). Le [spread operator](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Op%C3%A9rateurs/Syntaxe_d%C3%A9composition) permet dans la grande majorité des cas d'obtenir ce que l'on souhaite. Ici le premier test aurait par exemple pu s'écrire:
+```typescript
+describe('listReducer', () => {
+    const task1 = {
+      title : 'Task 1',
+      description : 'Some text',
+      isChecked: false,
+      id: '0',
+      creationDate: new Date(),
+    };
+  
+    const task2 = {
+      title : 'Task 2',
+      description : 'Some text',
+      isChecked: false,
+      id: '1',
+      creationDate: new Date(),
+    };
+
+    it('should update a given task', () => {
+      const updatedTask1 = { ...task1, title: 'Updated Task 1', isChecked: true };
+      const action = updateTaskAction({ task: updatedTask1 });
+      const result = listReducer([task1, task2], action);
+      expect(result).toEqual([updatedTask1, task2]); 
+    });
+```
+- Les bonnes pratiques NgRx incite à rendre un state sérialisable (voir [doc](https://ngrx.io/guide/store/configuration/runtime-checks#strictstateserializability)). Ici, l'interface `Task` possède une propriété `creationDate` dont le type est `Date`. Utiliser une date ISO 8601 (de type `string` donc) aurait été préférable dans un souci de séralisation. D'ailleurs, lors du process `JSON.parse(JSON.stringify())`, la date est transformée en ISO string, et dans ce cas l'objet retourné n'est plus de type `Task` alors qu'il devrait le rester.
+
+### todo-detail.component
+#### ts
+- Propriété `routeSub` jamais utilisée
+- Même chose que pour le composant `ChecklistComponent`, on a une fuite mémoire ligne 21 car la souscription n'est jamais 'unsubscribe'. La bonne solution aurait dû être celle-ci:
+```typescript
+// todo-detail.component.ts
+
+  task$: Observable<Task>;
+
+  ngOnInit(): void {
+    this.task$ = this.route.params.pipe(
+      switchMap(params => this.store.pipe(select(getTask, { id: params.id })))
+    );
+  }
+```
+```html
+<!-- todo-detail.component.html -->
+
+  <div *ngIf="(task$ | async) as task; else noTask">
+    ...
+  </div>
+  <ng-template #noTask>
+    ...
+  </ng-template>
+```
